@@ -21,8 +21,34 @@ function modelLoaded(){
 
 function speak(){
     var synth= window.speechSynthesis;
-    speak_data_1 = "The First Prediction Is " +Prediction_1;
-    speak_data_2 = "And the Second Prediction Is " +Prediction_2;
-    var utterThis = new SpeechSynthesisUtterance(speak_data_1 + speak_data_2);
+    speak_data_1 = Prediction_1;
+    var utterThis = new SpeechSynthesisUtterance(speak_data_1);
     synth.speak(utterThis);
+}
+
+function check(){
+    img=document.getElementById("captured_image");
+    classifier.classify(img, gotResult);
+}
+
+function gotResult(error, results){
+    if(error){
+        console.error(error);
+    }else{
+        console.log(results);
+        document.getElementById("result_emotion_name").innerHTML=results[0].label;
+        Prediction_1 = "";
+        if(results[0].label == 'Beautiful'){
+            Prediction_1="This Is Beautiful";
+            document.getElementById("update_emoji").innerHTML="&#128076;";
+        }
+         else if(results[0].label == 'Cheese'){
+            Prediction_1="Cheese";
+            document.getElementById("update_emoji").innerHTML="&#9996;";
+        }else if(results[0].label == 'Best'){
+            Prediction_1="Best";
+            document.getElementById("update_emoji").innerHTML="&#128077;";
+        }
+        speak();
+    }  
 }
